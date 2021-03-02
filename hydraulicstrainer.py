@@ -9,7 +9,6 @@ __email__ = "richard.poettler@gmail.com"
 
 
 app = Flask(__name__)
-# url_for("static", file_name="js/bootstrap.bundle.min.js")
 
 
 @app.route("/")
