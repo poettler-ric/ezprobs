@@ -10,7 +10,7 @@ __license__ = "MIT"
 __email__ = "richard.poettler@gmail.com"
 
 setup(
-    console=["hydraulicstrainer.py"],
+    console=["start.py"],
     data_files=[
         ("templates", glob("templates/*")),
         ("static/css", glob("static/css/*")),
