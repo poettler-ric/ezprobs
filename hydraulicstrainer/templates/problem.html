@@ -1,6 +1,50 @@
 {% extends "base.html" %}
+
 {% block content %}
-<div class="container">{% block description %}{% endblock %}</div>
-{% if g.params %}<div class="container">{% block parameters %}{% endblock %}</div>{% endif %}
-<div class="container">{% block solution %}{% endblock %}</div>
+<div class="container">
+  <h1>{% block title %}{% endblock %}</h1>
+
+  <h2>Description</h2>
+  {% block description %}{% endblock %}
+
+  <form>
+    {% if parameters %}
+    <h2>Parameters</h2>
+    {% for p in parameters %}
+    <div class="mb-3">
+      <label for="{{ p.name }}" class="form-label">{{ p.display }} = <span id="{{ p.name }}-display"><span> {{ p.unit }}</label>
+      <input type="range" class="form-range" id="{{ p.name }}" min="{{ p.val_min }}" max="{{ p.val_max }}" step="{{ p.val_step }}">
+      {% if p.description %}<div class="form-text">{{ p.description }}</div>{% endif %}
+    </div>
+    {% endfor %}
+    {% endif %}
+    <button type="submit" class="btn btn-primary">Calculate</button>
+  </form>
+
+  {% if solution %}
+  <h2>Solution</h2>
+  {% block solution %}{% endblock %}
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block onload_js %}
+<script>
+  $(document).ready(function() {
+      {% if parameters %}
+      {% for p in parameters %}
+      $("#{{ p.name }}").val({{ p.val_initial }});
+      $("#{{ p.name }}-display").text($("#{{ p.name }}").val());
+      {% endfor %}
+      {% endif %}
+  });
+
+  {% if parameters %}
+  {% for p in parameters %}
+  $("#{{ p.name }}").change(function() {
+      $("#{{ p.name }}-display").text($(this).val());
+  });
+  {% endfor %}
+  {% endif %}
+</script>
 {% endblock %}
