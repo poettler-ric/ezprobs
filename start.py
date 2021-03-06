@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-from flask import Flask, render_template, url_for
+# from flask import Flask, render_template
+# from hydraulicstrainer import demo
+from hydraulicstrainer import app
 
 __author__ = "Richard Pöttler"
 __copyright__ = "Copyright (c) 2021 Richard Pöttler"
@@ -8,18 +10,6 @@ __license__ = "MIT"
 __email__ = "richard.poettler@gmail.com"
 
 
-app = Flask(__name__)
-
-
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-
-def main():
+if __name__ == "__main__":
     # not needed if deployed properly https://flask.palletsprojects.com/en/1.1.x/deploying/
     app.run()
-
-
-if __name__ == "__main__":
-    main()
