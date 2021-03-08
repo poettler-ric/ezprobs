@@ -18,16 +18,8 @@ app.secret_key = config["server"]["secret_key"]
 app.config["problems"] = {
     "Mathematics": {
         "XY Problem": "xy",
-        "XZ Problem": "xz",
-    },
-    "Hydraulics": {
-        "Pipes": "pipes",
-        "Free Surface": "freesurface",
     },
 }
-
-# from hydraulicstrainer import main
-# from hydraulicstrainer import demo
 
 import hydraulicstrainer.main
 import hydraulicstrainer.demo
