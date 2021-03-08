@@ -16,6 +16,10 @@ config.read("config.ini")
 app.secret_key = config["server"]["secret_key"]
 
 app.config["problems"] = {
+    "Hydraulics": {
+        "Free Surface 01": "free_surface_01",
+        "Pressure Pipe 01": "pressure_pipe_01",
+    },
     "Mathematics": {
         "XY Problem": "xy",
     },
@@ -24,6 +28,14 @@ app.config["problems"] = {
 import hydraulicstrainer.main
 import hydraulicstrainer.demo
 import hydraulicstrainer.problems.xy
+import hydraulicstrainer.problems.free_surface_01
+import hydraulicstrainer.problems.pressure_pipe_01
 
 app.register_blueprint(demo.bp, url_prefix="/demo")
 app.register_blueprint(problems.xy.bp, url_prefix="/problems/xy")
+app.register_blueprint(
+    problems.free_surface_01.bp, url_prefix="/problems/free_surface_01"
+)
+app.register_blueprint(
+    problems.pressure_pipe_01.bp, url_prefix="/problems/pressure_pipe_01"
+)
