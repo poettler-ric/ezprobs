@@ -20,9 +20,6 @@ pip install --upgrade numpy
 pip install --upgrade matplotlib
 pip install --upgrade svgwrite
 pip install --upgrade scipy
-
-# only on windows
-pip install --upgrade py2exe
 ```
 
 ## User directory
@@ -36,17 +33,6 @@ pip install --user --upgrade numpy
 pip install --user --upgrade matplotlib
 pip install --user --upgrade svgwrite
 pip install --user --upgrade scipy
-
-# only on windows
-pip install --user --upgrade py2exe
-```
-
-# Build
-
-The Windows executable is build with the following command:
-
-``` shell
-python setup.py py2exe
 ```
 
 # Deploy
