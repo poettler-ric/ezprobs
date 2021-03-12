@@ -19,6 +19,7 @@ pip install --upgrade flask
 pip install --upgrade numpy
 pip install --upgrade matplotlib
 pip install --upgrade svgwrite
+pip install --upgrade scipy
 
 # only on windows
 pip install --upgrade py2exe
@@ -34,6 +35,7 @@ pip install --user --upgrade flask
 pip install --user --upgrade numpy
 pip install --user --upgrade matplotlib
 pip install --user --upgrade svgwrite
+pip install --user --upgrade scipy
 
 # only on windows
 pip install --user --upgrade py2exe
@@ -53,6 +55,6 @@ python setup.py py2exe
 
 ``` shell
 apt install nginx python3
-apt install python3-flask python3-numpy python3-matplotlib python3-svgwrite
+apt install python3-flask python3-numpy python3-matplotlib python3-svgwrite python3-scipy
 ```
 
