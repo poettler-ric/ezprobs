@@ -18,15 +18,10 @@ class Parameter:
         """Initializes the parameter with the given values.
 
         Raises a ``ValueError`` if the initial value is not between the minimum
-        and maximum value or is not divisible by the defined step."""
+        and maximum value."""
         if val_initial < val_min or val_initial > val_max:
             raise ValueError(
                 f"initial value ({val_initial}) must be between minimum ({val_min}) and maximum ({val_max})"
-            )
-
-        if val_initial % val_step != 0:
-            raise ValueError(
-                f"initial value ({val_initial}) must be divisible by step ({val_step})"
             )
 
         self.name = name
