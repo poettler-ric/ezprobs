@@ -2,6 +2,8 @@
 
 
 class Parameter:
+    """Holds a parameter and it's description for a problem."""
+
     def __init__(
         self,
         name,
@@ -13,6 +15,10 @@ class Parameter:
         unit="",
         description="",
     ):
+        """Initializes the parameter with the given values.
+
+        Raises a ``ValueError`` if the initial value is not between the minimum
+        and maximum value or is not divisible by the defined step."""
         if val_initial < val_min or val_initial > val_max:
             raise ValueError(
                 f"initial value ({val_initial}) must be between minimum ({val_min}) and maximum ({val_max})"
