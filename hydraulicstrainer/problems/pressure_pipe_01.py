@@ -27,9 +27,9 @@ bp = Blueprint("pressure_pipe_01", __name__)
 
 @bp.route("/", methods=["POST", "GET"])
 def index():
-    d1 = 5.1
-    d2 = 5.1
-    d3 = 5.1
+    d1 = 5.1 * CM
+    d2 = 5.1 * CM
+    d3 = 5.1 * CM
     ha = 260.0 * M
     hb = 197.2 * M
     h2 = 211.6 * M
@@ -44,9 +44,9 @@ def index():
     q_initial = 3 * 10 ** -3 * M3PS
 
     if request.method == "POST":
-        d1 = float(request.form["d1"])
-        d2 = float(request.form["d2"])
-        d3 = float(request.form["d3"])
+        d1 = float(request.form["d1"]) * CM
+        d2 = float(request.form["d2"]) * CM
+        d3 = float(request.form["d3"]) * CM
 
     parameters = [
         Parameter(
@@ -55,7 +55,7 @@ def index():
             5,
             6,
             0.1,
-            d1,
+            d1 / CM,
             unit="cm",
             description="Diameter of the pipe between I and II",
         ),
@@ -65,7 +65,7 @@ def index():
             5,
             6,
             0.1,
-            d2,
+            d2 / CM,
             unit="cm",
             description="Diameter of the pipe between II and III",
         ),
@@ -75,15 +75,12 @@ def index():
             5,
             6,
             0.1,
-            d3,
+            d3 / CM,
             unit="cm",
             description="Diameter of the pipe between III and VI",
         ),
     ]
 
-    d1 *= CM
-    d2 *= CM
-    d3 *= CM
     a1 = area_circle(d1 / 2)
     a2 = area_circle(d2 / 2)
     a3 = area_circle(d3 / 2)
