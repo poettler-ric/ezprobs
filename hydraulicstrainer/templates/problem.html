@@ -18,7 +18,9 @@
     </div>
     {% endfor %}
     {% endif %}
+    {% if not config.submit_on_change %}
     <button type="submit" class="btn btn-primary">Calculate</button>
+    {% endif %}
   </form>
 
   {% if solution %}
@@ -42,7 +44,11 @@
   {% if parameters %}
   {% for p in parameters %}
   $("#{{ p.name }}").change(function() {
+      {% if config.submit_on_change %}
+      this.form.submit();
+      {% else %}
       $("#{{ p.name }}-display").text($(this).val());
+      {% endif %}
   });
   {% endfor %}
   {% endif %}

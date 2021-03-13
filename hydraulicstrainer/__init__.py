@@ -24,6 +24,7 @@ app.config["problems"] = {
         "XY Problem": "xy",
     },
 }
+app.config["submit_on_change"] = config["application"].getboolean("submit_on_change")
 
 import hydraulicstrainer.main
 import hydraulicstrainer.demo
