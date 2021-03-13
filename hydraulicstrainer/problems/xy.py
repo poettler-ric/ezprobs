@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from flask import Blueprint, Response, render_template, request, session
-from hydraulicstrainer.problems import Parameter
+from hydraulicstrainer.problems import Parameter, Plot
 from io import BytesIO
 
 import matplotlib as mpl
@@ -51,7 +51,12 @@ def index():
     # graph is a separate request
     session["solution"] = solution
 
-    return render_template("problems/xy.html", parameters=parameters, solution=solution)
+    # define a plot which should appear above the parameters
+    plot = Plot("plot", alt="plot", caption="Plot of the function.")
+
+    return render_template(
+        "problems/xy.html", plot=plot, parameters=parameters, solution=solution
+    )
 
 
 @bp.route("/plot")

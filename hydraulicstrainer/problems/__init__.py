@@ -31,3 +31,12 @@ class Parameter:
         self.val_min = val_min
         self.val_max = val_max
         self.val_step = val_step
+
+
+class Plot:
+    """Plot which should appear over the parameter section."""
+
+    def __init__(self, url, alt="", caption=""):
+        self.url = url
+        self.alt = alt
+        self.caption = caption
