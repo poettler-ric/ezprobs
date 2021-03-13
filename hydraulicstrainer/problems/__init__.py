@@ -13,6 +13,16 @@ class Parameter:
         unit="",
         description="",
     ):
+        if val_initial < val_min or val_initial > val_max:
+            raise ValueError(
+                f"initial value ({val_initial}) must be between minimum ({val_min}) and maximum ({val_max})"
+            )
+
+        if val_initial % val_step != 0:
+            raise ValueError(
+                f"initial value ({val_initial}) must be divisible by step ({val_step})"
+            )
+
         self.name = name
         self.unit = unit
         self.display = display
