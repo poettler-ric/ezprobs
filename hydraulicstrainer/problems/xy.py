@@ -36,11 +36,12 @@ def index():
         "a",
         -5,
         5,
+        1,
         val_initial=a,
         description="Inclination of the function",
     )
     parameter_b = Parameter(
-        "b", "b", -5, 5, val_initial=b, description="Offset of the function"
+        "b", "b", -5, 5, 1, val_initial=b, description="Offset of the function"
     )
     # save them into the list passed later to the template
     parameters = [parameter_a, parameter_b]

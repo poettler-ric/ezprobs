@@ -10,8 +10,8 @@ class Parameter:
         display,
         val_min,
         val_max,
-        val_step=1,
-        val_initial=0,
+        val_step,
+        val_initial,
         unit="",
         description="",
     ):
