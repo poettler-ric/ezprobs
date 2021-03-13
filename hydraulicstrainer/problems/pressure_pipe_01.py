@@ -48,37 +48,38 @@ def index():
         d2 = float(request.form["d2"])
         d3 = float(request.form["d3"])
 
-    parameter_d1 = Parameter(
-        "d1",
-        "d1",
-        5,
-        6,
-        val_initial=d1,
-        val_step=0.1,
-        unit="cm",
-        description="Diameter of the pipe between I and II",
-    )
-    parameter_d2 = Parameter(
-        "d2",
-        "d2",
-        5,
-        6,
-        val_initial=d2,
-        val_step=0.1,
-        unit="cm",
-        description="Diameter of the pipe between II and III",
-    )
-    parameter_d3 = Parameter(
-        "d3",
-        "d3",
-        5,
-        6,
-        val_initial=d3,
-        val_step=0.1,
-        unit="cm",
-        description="Diameter of the pipe between III and VI",
-    )
-    parameters = [parameter_d1, parameter_d2, parameter_d3]
+    parameters = [
+        Parameter(
+            "d1",
+            "d1",
+            5,
+            6,
+            0.1,
+            d1,
+            unit="cm",
+            description="Diameter of the pipe between I and II",
+        ),
+        Parameter(
+            "d2",
+            "d2",
+            5,
+            6,
+            0.1,
+            d2,
+            unit="cm",
+            description="Diameter of the pipe between II and III",
+        ),
+        Parameter(
+            "d3",
+            "d3",
+            5,
+            6,
+            0.1,
+            d3,
+            unit="cm",
+            description="Diameter of the pipe between III and VI",
+        ),
+    ]
 
     d1 *= CM
     d2 *= CM

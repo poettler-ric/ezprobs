@@ -30,21 +30,19 @@ def index():
         a = int(request.form["a"])
         b = int(request.form["b"])
 
-    # define initial state of the parameters
-    parameter_a = Parameter(
-        "a",
-        "a",
-        -5,
-        5,
-        1,
-        val_initial=a,
-        description="Inclination of the function",
-    )
-    parameter_b = Parameter(
-        "b", "b", -5, 5, 1, val_initial=b, description="Offset of the function"
-    )
-    # save them into the list passed later to the template
-    parameters = [parameter_a, parameter_b]
+    # define configurable parameters
+    parameters = [
+        Parameter(
+            "a",
+            "a",
+            -5,
+            5,
+            1,
+            a,
+            description="Inclination of the function",
+        ),
+        Parameter("b", "b", -5, 5, 1, b, description="Offset of the function"),
+    ]
 
     # pack the values needed when generating the solution section
     solution = {"a": a, "b": b}
