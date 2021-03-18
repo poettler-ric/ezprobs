@@ -1,13 +1,35 @@
 #!/usr/bin/env python3
 
 from hydraulicstrainer.units import GRAVITY, KINEMATIC_VISCOSITY
-from math import log, sqrt
+from math import log, sqrt, atan
 from scipy.optimize import fsolve
 
 __author__ = "Richard Pöttler"
 __copyright__ = "Copyright (c) 2021 Richard Pöttler"
 __license__ = "MIT"
 __email__ = "richard.poettler@gmail.com"
+
+
+def f_ruehlmann(y):
+    """F function for the Ruehlmann calculation."""
+    return 1 / 6 * log((y ** 2 + y + 1) / (y - 1) ** 2) + 1 / sqrt(3) * atan(
+        (1 + 2 * y) / sqrt(3)
+    )
+
+
+def ruehlmann_rect(h, hn, h0, h_cr, i):
+    """Calculates the distance of a waterlevel according to Ruehlmann."""
+    y = h / hn
+    y0 = h0 / hn
+    return (
+        hn
+        / i
+        * (
+            h0 / hn
+            - h / hn
+            + (1 - (h_cr / hn) ** 3) * (f_ruehlmann(y) - f_ruehlmann(y0))
+        )
+    )
 
 
 def t_n_rect(discharge, strickler_roughness, inclination, width, start=1):
