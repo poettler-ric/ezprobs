@@ -3,13 +3,40 @@
 {% block title %}Free Surface 01{% endblock %}
 
 {% block description %}
-<figure class="figure">
-  <img src="{{ url_for('static', filename='images/free_surface_01.png') }}"
-       class="figure-img img-fluid rounded"
-       alt="setting">
-  <figcaption class="figure-caption">Channel description</figcaption>
-</figure>
+<div class="container" align="center">
+  <figure class="figure">
+    <img src="{{ url_for('static', filename='images/free_surface_01.png') }}"
+         class="figure-img img-fluid rounded"
+         alt="setting">
+    <figcaption class="figure-caption">Channel description</figcaption>
+  </figure>
+</div>
+$$
+\begin{align}
+q &= 20\:\mathrm{m^3/s} \\
+width &= 2.5\:\mathrm{m} \\
+I_s &= 0.013 \\
+\end{align}
+$$
 {% endblock %}
 
 {% block solution %}
+
+$$
+\begin{align}
+t_{crit} &= {{ "%.3f"|format(solution.t_crit) }}\:\mathrm{m} \\
+t_{n1} &= {{ "%.3f"|format(solution.t_n1) }}\:\mathrm{m} \\
+t_{n2} &= {{ "%.3f"|format(solution.t_n2) }}\:\mathrm{m} \\
+t_{n3} &= {{ "%.3f"|format(solution.t_n3) }}\:\mathrm{m} \\
+l_{au} &= {{ "%.3f"|format(solution.l_au) }}\:\mathrm{m} \\
+l_{bu} &= {{ "%.3f"|format(solution.l_bu) }}\:\mathrm{m} \\
+\end{align}
+$$
+
+<div class="container" align="center">
+  <figure class="figure">
+    <img src="plot" class="figure-img img-fluid rounded" alt="plot">
+    <figcaption class="figure-caption">Water Surfaces</figcaption>
+  </figure>
+</div>
 {% endblock %}
