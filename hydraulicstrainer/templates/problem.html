@@ -24,7 +24,7 @@
     <h2>Parameters</h2>
     {% for p in parameters %}
     <div class="mb-3">
-      <label for="{{ p.name }}" class="form-label">{{ p.display }} = <span id="{{ p.name }}-display"></span> {{ p.unit }}</label>
+      <label for="{{ p.name }}" class="form-label">{{ p.display }} = <span id="{{ p.name }}-display"></span> \(\mathrm{ {{ p.unit }} }\)</label>
       <input type="range" class="form-range" id="{{ p.name }}" name="{{ p.name }}" min="{{ p.val_min }}" max="{{ p.val_max }}" step="{{ p.val_step }}">
       {% if p.description %}<div class="form-text">{{ p.description }}</div>{% endif %}
     </div>
