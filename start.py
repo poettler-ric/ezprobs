@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
-# from flask import Flask, render_template
-# from hydraulicstrainer import demo
-from hydraulicstrainer import app
+from ezprobs import app
 
 __author__ = "Richard Pöttler"
 __copyright__ = "Copyright (c) 2021 Richard Pöttler"

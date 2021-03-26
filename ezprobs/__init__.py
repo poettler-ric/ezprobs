@@ -26,11 +26,11 @@ app.config["problems"] = {
 }
 app.config["submit_on_change"] = config["application"].getboolean("submit_on_change")
 
-import hydraulicstrainer.main
-import hydraulicstrainer.demo
-import hydraulicstrainer.problems.xy
-import hydraulicstrainer.problems.free_surface_01
-import hydraulicstrainer.problems.pressure_pipe_01
+import ezprobs.main
+import ezprobs.demo
+import ezprobs.problems.xy
+import ezprobs.problems.free_surface_01
+import ezprobs.problems.pressure_pipe_01
 
 app.register_blueprint(demo.bp, url_prefix="/demo")
 app.register_blueprint(problems.xy.bp, url_prefix="/problems/xy")

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 from flask import Blueprint, Response, render_template, request, session
-from hydraulicstrainer.geometry import area_circle
-from hydraulicstrainer.hydraulics import pipe_loss, local_loss
-from hydraulicstrainer.problems import Parameter
-from hydraulicstrainer.units import M, CM, MM, M3PS, KINEMATIC_VISCOSITY, GRAVITY
+from ezprobs.geometry import area_circle
+from ezprobs.hydraulics import pipe_loss, local_loss
+from ezprobs.problems import Parameter
+from ezprobs.units import M, CM, MM, M3PS, KINEMATIC_VISCOSITY, GRAVITY
 from io import BytesIO
 from math import sqrt
 from scipy.optimize import fsolve

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from hydraulicstrainer.units import GRAVITY, KINEMATIC_VISCOSITY
+from ezprobs.units import GRAVITY, KINEMATIC_VISCOSITY
 from math import log, sqrt, atan
 from scipy.optimize import fsolve
 

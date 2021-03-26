@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from hydraulicstrainer import app
+from ezprobs import app
 
 from flask import render_template
 

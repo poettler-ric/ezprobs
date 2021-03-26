@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
 from flask import Blueprint, Response, render_template, request, session
-from hydraulicstrainer.hydraulics import t_n_rect, t_crit_rect, ruehlmann_rect
-from hydraulicstrainer.problems import Parameter
-from hydraulicstrainer.units import M, S, M3PS, GRAVITY
+from ezprobs.hydraulics import t_n_rect, t_crit_rect, ruehlmann_rect
+from ezprobs.problems import Parameter
+from ezprobs.units import M, S, M3PS, GRAVITY
 from io import BytesIO
 
 import numpy as np

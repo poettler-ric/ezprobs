@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from flask import Blueprint, Response, render_template, request, session
-from hydraulicstrainer.problems import Parameter, Plot
+from ezprobs.problems import Parameter, Plot
 from io import BytesIO
 
 import matplotlib as mpl

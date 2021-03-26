@@ -6,9 +6,9 @@ Create the environment:
 
 ``` shell
 # create environment
-python3 -m venv ~/pyenv/hydraulicstrainer
+python3 -m venv ~/pyenv/ezprobs
 # activate environment
-source ~/pyenv/hydraulicstrainer/bin/activate
+source ~/pyenv/ezprobs/bin/activate
 ```
 
 And install the needed packages:
