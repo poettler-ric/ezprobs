@@ -35,6 +35,14 @@ pip install --user --upgrade svgwrite
 pip install --user --upgrade scipy
 ```
 
+# Development
+
+``` shell
+export FLASK_APP=ezprobs
+export FLASK_ENV=development
+flask run
+```
+
 # Deploy
 
 ## Debian
