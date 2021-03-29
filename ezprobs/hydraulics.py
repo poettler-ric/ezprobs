@@ -51,7 +51,7 @@ def t_n_rect(discharge, strickler_roughness, inclination, width, start=1):
 
 def t_crit_rect(discharge, width):
     """Calculates the critical depth of a rectangular channel."""
-    return (discharge / (width ** 2 * GRAVITY)) ** (1 / 3)
+    return (discharge ** 2 / (width ** 2 * GRAVITY)) ** (1 / 3)
 
 
 def lambda_turbulent_rough(k, d):
