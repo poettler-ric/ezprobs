@@ -1,6 +1,6 @@
 {% extends "problem.html" %}
 
-{% block title %}Pressure Pipe 01{% endblock %}
+{% block title %}Pressure Pipe{% endblock %}
 
 {% block description %}
 Given is a pipe system as shown below.
@@ -38,11 +38,4 @@ $$
 $$
 q \approx {{ "%.6f"|format(solution.discharge) }}\:\mathrm{m^3/s} = {{ "%.3f"|format(solution.discharge * 1000) }}\:\mathrm{l/s}
 $$
-
-<div class="container" align="center">
-  <figure class="figure">
-    <img src="plot" class="figure-img img-fluid rounded" alt="plot">
-    <figcaption class="figure-caption">Energy- and pressure lines</figcaption>
-  </figure>
-</div>
 {% endblock %}

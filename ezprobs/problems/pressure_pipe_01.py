@@ -3,7 +3,7 @@
 from flask import Blueprint, Response, render_template, request, session
 from ezprobs.geometry import area_circle
 from ezprobs.hydraulics import pipe_loss, local_loss
-from ezprobs.problems import Parameter
+from ezprobs.problems import Parameter, Plot
 from ezprobs.units import M, CM, MM, M3PS, KINEMATIC_VISCOSITY, GRAVITY
 from io import BytesIO
 from math import sqrt
@@ -133,8 +133,13 @@ def index():
     }
     session["solution"] = solution
 
+    plot = Plot("plot", alt="plot", caption="Energy- and pressure lines")
+
     return render_template(
-        "problems/pressure_pipe_01.html", parameters=parameters, solution=solution
+        "problems/pressure_pipe_01.html",
+        plot=plot,
+        parameters=parameters,
+        solution=solution,
     )
 
 

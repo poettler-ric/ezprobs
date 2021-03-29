@@ -18,7 +18,7 @@ app.secret_key = config["server"]["secret_key"]
 app.config["problems"] = {
     "Hydraulics": {
         "Flow Regime Transition": "flow_regime_transition",
-        "Pressure Pipe 01": "pressure_pipe_01",
+        "Pressure Pipe": "pressure_pipe",
     },
     "Mathematics": {
         "XY Problem": "xy",
@@ -38,5 +38,5 @@ app.register_blueprint(
     problems.free_surface_01.bp, url_prefix="/problems/flow_regime_transition"
 )
 app.register_blueprint(
-    problems.pressure_pipe_01.bp, url_prefix="/problems/pressure_pipe_01"
+    problems.pressure_pipe_01.bp, url_prefix="/problems/pressure_pipe"
 )
