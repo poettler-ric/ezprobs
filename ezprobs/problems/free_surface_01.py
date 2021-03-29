@@ -7,7 +7,7 @@ from ezprobs.hydraulics import (
     ruehlmann_rect,
     l_transition_i_r_rect,
 )
-from ezprobs.problems import Parameter
+from ezprobs.problems import Parameter, Plot
 from ezprobs.units import M, S, M3PS, GRAVITY, PERMILLE
 from io import BytesIO
 
@@ -79,8 +79,13 @@ def index():
     }
     session["solution"] = solution
 
+    plot = Plot("plot", alt="surface", caption="Water Surface")
+
     return render_template(
-        "problems/free_surface_01.html", parameters=parameters, solution=solution
+        "problems/free_surface_01.html",
+        plot=plot,
+        parameters=parameters,
+        solution=solution,
     )
 
 
