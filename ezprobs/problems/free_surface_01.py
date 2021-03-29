@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
 
 from flask import Blueprint, Response, render_template, request, session
-from ezprobs.hydraulics import t_n_rect, t_crit_rect, ruehlmann_rect
+from ezprobs.hydraulics import (
+    t_n_rect,
+    t_crit_rect,
+    ruehlmann_rect,
+    l_transition_i_r_rect,
+)
 from ezprobs.problems import Parameter
-from ezprobs.units import M, S, M3PS, GRAVITY
+from ezprobs.units import M, S, M3PS, GRAVITY, PERMILLE
 from io import BytesIO
 
 import numpy as np
@@ -24,23 +29,20 @@ bp = Blueprint("free_surface_01", __name__)
 
 @bp.route("/", methods=["POST", "GET"])
 def index():
-    w = 2.5 * M
-    q = 20 * M3PS
-    i = 0.013
+    w = 4 * M
+    q = 30 * M3PS
+    i = 7.6 * PERMILLE
 
     ks1 = 25 * M ** (1 / 3) / S
-    ks2 = 80 * M ** (1 / 3) / S
-    ks3 = 32 * M ** (1 / 3) / S
+    ks2 = 55 * M ** (1 / 3) / S
 
     if request.method == "POST":
         ks1 = int(request.form["ks1"]) * M ** (1 / 3) / S
         ks2 = int(request.form["ks2"]) * M ** (1 / 3) / S
-        ks3 = int(request.form["ks3"]) * M ** (1 / 3) / S
 
     t_crit = t_crit_rect(q, w)
     t_n1 = t_n_rect(q, ks1, i, w)
     t_n2 = t_n_rect(q, ks2, i, w)
-    t_n3 = t_n_rect(q, ks3, i, w)
 
     parameters = [
         Parameter(
@@ -56,27 +58,14 @@ def index():
         Parameter(
             "ks2",
             "ks2",
-            75,
-            85,
-            1,
+            10,
+            70,
+            10,
             ks2,
             unit="m^{1/3}/s",
             description="Strickler value section 2",
         ),
-        Parameter(
-            "ks3",
-            "ks3",
-            25,
-            35,
-            1,
-            ks3,
-            unit="m^{1/3}/s",
-            description="Strickler value section 3",
-        ),
     ]
-
-    l_au = ruehlmann_rect(0.99 * t_n1, t_n1, t_n2, t_crit, i)
-    l_bu = ruehlmann_rect(1.01 * t_n2, t_n2, t_n3, t_crit, i)
 
     solution = {
         "i": i,
@@ -84,10 +73,9 @@ def index():
         "q": q,
         "t_crit": t_crit,
         "t_n1": t_n1,
+        "ks_1": ks1,
         "t_n2": t_n2,
-        "t_n3": t_n3,
-        "l_au": l_au,
-        "l_bu": l_bu,
+        "ks_2": ks2,
     }
     session["solution"] = solution
 
@@ -103,58 +91,86 @@ def plot_function():
     q = session["solution"]["q"]
     t_crit = session["solution"]["t_crit"]
     t_n1 = session["solution"]["t_n1"]
+    ks_1 = session["solution"]["ks_1"]
     t_n2 = session["solution"]["t_n2"]
-    t_n3 = session["solution"]["t_n3"]
-    l_au = session["solution"]["l_au"]
-    l_bu = session["solution"]["l_bu"]
+    ks_2 = session["solution"]["ks_2"]
 
-    x_a = 400 * M
-    x_b = 800 * M
-    x_end = 900 * M
-    h_start = x_end * i
+    x_min = -400 * M
+    x_max = 400 * M
+    y_min = 0 * M
+    y_max = 12 * M
 
-    xsole = [0, x_end]
-    ysole = [h_start, 0]
-
-    # assemble crit line
-    tcr = np.array([t_crit, t_crit])
-    xcr = np.array([0, x_end])
-
-    ycr = (h_start - (xcr * i)) + tcr
-
-    # assemble normal line
-    tn = [t_n1, t_n1, t_n2, t_n2, t_n3, t_n3]
-    xn = [0, x_a, x_a, x_b, x_b, x_end]
-
-    xn = np.array(xn)
-    tn = np.array(tn)
-    yn = (h_start - (xn * i)) + tn
+    x_start = -400 * M
+    x_a = 0 * M
+    x_end = 400 * M
 
     # assemble ruehlmann line
-    xr = [0, x_a - l_au]
-    tr = [t_n1, t_n1]
+    xr = []
+    tr = []
 
-    ys = np.linspace(t_n1, t_n2, 22)
-    for y in ys[1:-1]:
-        xr.append(x_a - ruehlmann_rect(y, t_n1, t_n2, t_crit, i))
-        tr.append(y)
-    xr.append(x_a)
-    tr.append(t_n2)
-    xr.append(x_b - l_bu)
-    tr.append(t_n2)
+    if ks_1 == ks_2:
+        xr.append(x_start)
+        tr.append(t_n1)
+    elif t_n2 < t_crit:
+        # ruehlmann decline until t_crit at point a
+        l_au = ruehlmann_rect(0.99 * t_n1, t_n1, t_crit, t_crit, i)
+        x_start = min(x_start, x_a - l_au)
 
-    ys = np.linspace(t_n2, t_n3, 22)
-    for y in ys[1:-1]:
-        xr.append(x_b - ruehlmann_rect(y, t_n2, t_n3, t_crit, i))
-        tr.append(y)
-    xr.append(x_b)
-    tr.append(t_n3)
+        xr.append(x_start)
+        xr.append(x_a - l_au)
+        tr.append(t_n1)
+        tr.append(t_n1)
+
+        ys = np.linspace(t_n1, t_crit, 22)
+        for y in ys[1:-1]:
+            xr.append(x_a - ruehlmann_rect(y, t_n1, t_crit, t_crit, i))
+            tr.append(y)
+        xr.append(x_a)
+        tr.append(t_crit)
+
+        # decline with i_r
+        l_transition = l_transition_i_r_rect(q, ks_2, w, t_crit, t_n2, i)
+        xr.append(x_a + l_transition)
+        tr.append(t_n2)
+
+        x_end = max(x_end, x_a + l_transition)
+    else:
+        factor = 0.99 if t_n2 < t_n1 else 1.01
+        l_au = ruehlmann_rect(factor * t_n1, t_n1, t_n2, t_crit, i)
+        x_start = min(x_start, x_a - l_au)
+
+        xr.append(x_start)
+        xr.append(x_a - l_au)
+        tr.append(t_n1)
+        tr.append(t_n1)
+
+        ys = np.linspace(t_n1, t_n2, 22)
+        for y in ys[1:-1]:
+            xr.append(x_a - ruehlmann_rect(y, t_n1, t_n2, t_crit, i))
+            tr.append(y)
+        xr.append(x_a)
+        tr.append(t_n2)
+
     xr.append(x_end)
-    tr.append(t_n3)
+    tr.append(t_n2)
 
     xr = np.array(xr)
     tr = np.array(tr)
-    yr = (h_start - (xr * i)) + tr
+    yr = (i * (x_max - xr)) + tr
+
+    # assemble crit line
+    tcr = np.array([t_crit, t_crit])
+    xcr = np.array([x_start, x_end])
+    ycr = (i * (x_max - xcr)) + tcr
+
+    # assemble normal line
+    xn = np.array([x_start, x_a, x_a, x_end])
+    tn = np.array([t_n1, t_n1, t_n2, t_n2])
+    yn = (i * (x_max - xn)) + tn
+
+    # assemble river bed
+    xsole = [x_min, x_max]
+    ysole = [i * (x_max - x_min), 0]
 
     fig, ax = plt.subplots()
     ax.plot(xn, yn, label="Normal Depth", color="green")
@@ -166,6 +182,8 @@ def plot_function():
 
     ax.grid()
     ax.legend()
+    ax.set_xlim(x_min, x_max)
+    ax.set_ylim(y_min, y_max)
     ax.set_xlabel("Distance [m]")
     ax.set_ylabel("Height [m]")
     ax.set_title("Water Surfaces")
