@@ -49,6 +49,26 @@ def t_n_rect(discharge, strickler_roughness, inclination, width, start=1):
     )[0]
 
 
+def i_r_rect(discharge, strickler_roughness, width, t_1, t_2):
+    """Calculates the inclination of the energy line based on the strickler value."""
+    # calculate area and wetted perimeter on median values
+    a_m = width * (t_1 + t_2) / 2
+    u_m = width + t_1 + t_2
+    r_m = a_m / u_m
+
+    return (discharge / (a_m * strickler_roughness * r_m ** (2 / 3))) ** 2
+
+
+def l_transition_i_r_rect(discharge, strickler_roughness, width, t_1, t_2, inclination):
+    """Calculates the transition lenght based only on the inclination of the energy line"""
+    i_r = i_r_rect(discharge, strickler_roughness, width, t_1, t_2)
+    v_1 = discharge / (width * t_1)
+    v_2 = discharge / (width * t_2)
+    return (t_2 + v_2 ** 2 / (2 * GRAVITY) - (t_1 + v_1 ** 1 / (2 * GRAVITY))) / (
+        inclination - i_r
+    )
+
+
 def t_crit_rect(discharge, width):
     """Calculates the critical depth of a rectangular channel."""
     return (discharge ** 2 / (width ** 2 * GRAVITY)) ** (1 / 3)
