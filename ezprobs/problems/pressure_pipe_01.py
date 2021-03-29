@@ -152,10 +152,11 @@ def plot_function():
     pressure_line = session["solution"]["pressure_line"]
 
     fig, ax = plt.subplots()
-    ax.plot(x, energy_horizon, label="Energy Horizon")
-    ax.plot(x, energy_line, label="Energy Line")
-    ax.plot(x, pressure_line, label="Pressure Line")
-    ax.plot(x, pipe, label="Pipe")
+    ax.plot(x, energy_horizon, label="Energy Horizon", color="red", linestyle="dashdot")
+    ax.plot(x, energy_line, label="Energy Line", color="red")
+    ax.plot(x, pressure_line, label="Pressure Line", color="blue", linestyle="dashed")
+    ax.plot(x, pipe, label="Pipe", color="black", linestyle="dashdot")
+
     ax.grid()
     ax.legend()
     ax.set_xlabel("Distance [m]")

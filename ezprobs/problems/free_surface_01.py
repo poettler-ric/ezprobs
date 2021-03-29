@@ -176,14 +176,17 @@ def plot_function():
     yn = (i * (x_max - xn)) + tn
 
     # assemble river bed
-    xsole = [x_min, x_max]
-    ysole = [i * (x_max - x_min), 0]
+    xsole1 = [x_min, x_a]
+    ysole1 = [i * (x_max - x_min), i * (x_max - x_a)]
+    xsole2 = [x_a, x_max]
+    ysole2 = [i * (x_max - x_a), 0]
 
     fig, ax = plt.subplots()
-    ax.plot(xn, yn, label="Normal Depth", color="green")
-    ax.plot(xr, yr, label="Ruehlmann", color="blue")
-    ax.plot(xcr, ycr, label="Critical Depth", color="red")
-    ax.plot(xsole, ysole, label="Ground", color="black")
+    ax.plot(xn, yn, label="Normal Depth", color="black", linestyle="dashed")
+    ax.plot(xr, yr, label="Water Surface", color="blue", linewidth=3)
+    ax.plot(xcr, ycr, label="Critical Depth", color="black", linestyle="dashdot")
+    ax.plot(xsole1, ysole1, label="Ground 1", color="black")
+    ax.plot(xsole2, ysole2, label="Ground 2", color="black", linewidth=4)
 
     ax.grid()
     ax.legend()
