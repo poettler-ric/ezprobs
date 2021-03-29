@@ -95,11 +95,13 @@ def plot_function():
     t_n2 = session["solution"]["t_n2"]
     ks_2 = session["solution"]["ks_2"]
 
+    # plot window
     x_min = -400 * M
     x_max = 400 * M
     y_min = 0 * M
     y_max = 12 * M
 
+    # start and end of the sufrace calculation
     x_start = -400 * M
     x_a = 0 * M
     x_end = 400 * M
@@ -174,9 +176,7 @@ def plot_function():
 
     fig, ax = plt.subplots()
     ax.plot(xn, yn, label="Normal Depth", color="green")
-
     ax.plot(xr, yr, label="Ruehlmann", color="blue")
-
     ax.plot(xcr, ycr, label="Critical Depth", color="red")
     ax.plot(xsole, ysole, label="Ground", color="black")
 
@@ -186,7 +186,7 @@ def plot_function():
     ax.set_ylim(y_min, y_max)
     ax.set_xlabel("Distance [m]")
     ax.set_ylabel("Height [m]")
-    ax.set_title("Water Surfaces")
+    ax.set_title("Water Surface")
 
     buffer = BytesIO()
     fig.savefig(buffer, format="png")
