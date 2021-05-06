@@ -17,7 +17,7 @@ app.secret_key = config["server"]["secret_key"]
 
 app.config["problems"] = {
     "Hydraulics": {
-        "Flow Regime Transition": "flow_regime_transition",
+        "Flow Regime Transition": "flow_regime_transition_fit_3",
         "Pressure Pipe": "pressure_pipe",
     },
     "Mathematics": {
@@ -30,12 +30,20 @@ import ezprobs.main
 import ezprobs.demo
 import ezprobs.problems.xy
 import ezprobs.problems.free_surface_01
+import ezprobs.problems.free_surface_01_fit_3
+import ezprobs.problems.free_surface_01_fit_5
 import ezprobs.problems.pressure_pipe_01
 
 app.register_blueprint(demo.bp, url_prefix="/demo")
 app.register_blueprint(problems.xy.bp, url_prefix="/problems/xy")
 app.register_blueprint(
     problems.free_surface_01.bp, url_prefix="/problems/flow_regime_transition"
+)
+app.register_blueprint(
+    problems.free_surface_01_fit_3.bp, url_prefix="/problems/flow_regime_transition_fit_3"
+)
+app.register_blueprint(
+    problems.free_surface_01_fit_5.bp, url_prefix="/problems/flow_regime_transition_fit_5"
 )
 app.register_blueprint(
     problems.pressure_pipe_01.bp, url_prefix="/problems/pressure_pipe"
