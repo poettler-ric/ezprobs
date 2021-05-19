@@ -1,0 +1,152 @@
+\section{Problems}
+
+In this section the steps needed to create a new problem will be discussed.
+
+\subsection{Skeleton}
+
+In this subsection the bare minimum of steps will be discussed to create the
+skeleton of a problem.
+
+\subsubsection{Template}
+
+The template controls how the problem is displayed on on the client. All
+templates are basically \verb+HTML+ processed by the
+\href{https://jinja.palletsprojects.com/}{Jinja} template engine.
+
+To create a new problem a new file with a descriptive name must be created
+under \verb+ezprobs/templates/problems+. This file should have the extension
+\verb+.html+. The content of the file might look like something like this:
+
+\begin{lstlisting}[language=html]
+{% extends "problem.html" %}
+
+{% block title %}TEST{% endblock %}
+
+{% block description %}
+test description
+{% endblock %}
+
+{% block solution %}
+test solution
+{% endblock %}
+\end{lstlisting}
+
+The \verb+extends+ directive is mandatory and causes the generation of e.g. the
+parameter section.  The \verb+title+, \verb+description+ and \verb+solution+
+blocks are also mandatory. The \verb+title+ block is used to set the title of
+the problem. The remaining blocks will be described in subsequent sections.
+
+During this demonstration the file will be saved as \verb+ezprobs/templates/problems/test.html+.
+
+\subsubsection{Python Code}
+
+All problems are implemented as
+\href{https://flask.palletsprojects.com/}{Flask} blueprints.
+
+The problem python files should be saved under the \verb+ezprobs/problems+
+directory with a representative name. The minimum code needed to implement a
+problem is as follows:
+
+\begin{lstlisting}[language=python]
+from flask import Blueprint, render_template
+
+bp = Blueprint("test", __name__)
+
+@bp.route("/", methods=["POST", "GET"])
+def index():
+    return render_template("problems/test.html")
+\end{lstlisting}
+
+The name provided to the \verb+Blueprint+ constructer must be unique across the
+whole application. The template provided to the \verb+render_template+
+function must be the filename of the previously created template.
+
+For this demonstration the file will be called \verb+ezprobs/problems/test.py+.
+
+\subsubsection{Linking}
+
+To make the problem available in the Flask application it must be linked in it.
+This will be done by modifying \verb+ezprobs/__init__.py+ by adding the
+following lines to make the demonstration example available:
+
+\begin{lstlisting}[language=python]
+import ezprobs.problems.test
+app.register_blueprint(
+    problems.test.bp, url_prefix="/problems/test"
+)
+\end{lstlisting}
+
+This loads the newly created module and makes the blueprint available under the
+given url. The problem should be acessible by pointing the browser to
+\href{http://localhost:5000/problems/test/} if the development server is running.
+
+The values must be changed to the names of the current problem to add.
+
+By convention problems should be linked under \verb+/problems+.
+
+To make the problem available in the menu bar a new entry must be added to the
+the \verb+app.config["problems"]+ dictionary. To make The \verb+test+ problem
+available a new \verb+Test Runs+ section is added and the problem is named
+\verb+Test+.
+
+\begin{lstlisting}[language=python]
+app.config["problems"] = {
+    "Hydraulics": {
+        "Flow Regime Transition": "flow_regime_transition_fit_3",
+        "Pressure Pipe": "pressure_pipe",
+    },
+    "Mathematics": {
+        "XY Problem": "xy",
+    },
+    "Test Runs": {
+        "Test": "test",
+    },
+}
+\end{lstlisting}
+
+\subsection{Description}
+
+The \verb+description+ block in the template is used to describe the problem at hand.
+
+\subsection{Parameters}
+
+\subsection{Solution}
+
+\subsection{Images}
+
+\subsubsection{Static Images}
+
+\subsubsection{Graphs}
+
+\subsubsection{Vector Graphics}
+
+\subsubsection{Plots}
+
+\subsection{Mathematical Expressions}
+
+To render mathematical expressions \href{https://www.mathjax.org/}{MathJax} is
+used. This enables the usage of \LaTeX\ in the \verb+description+ and
+\verb+solution+ blocks.
+
+To use the \LaTeX\ math mode for inline expressions they have to be enclosed in \verb+\(\)+ like:
+
+\begin{lstlisting}
+The discharge is given by \(Q\).
+\end{lstlisting}
+
+To render a single line equation it is enough to enclose it with \verb+$$+ like:
+
+\begin{lstlisting}
+$$f(x) = a \cdot x + b$$
+\end{lstlisting}
+
+For multiline equations an align \LaTeX\ environment should be used like this:
+
+\begin{lstlisting}
+$$
+\begin{align}
+f(x) &= a \cdot x + b \\
+g(x) &= c \cdot x + d \\
+\end{align}
+$$
+\end{lstlisting}
