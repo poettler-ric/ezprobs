@@ -5,3 +5,4 @@ __pycache__
 *.lot
 *.toc
 .auctex-auto
+*.out
