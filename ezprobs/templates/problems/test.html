@@ -1,0 +1,20 @@
+{% extends "problem.html" %}
+
+{% block title %}TEST{% endblock %}
+
+{% block description %}
+test description
+{% endblock %}
+
+{% block solution %}
+$$result = {{ solution.a }} + 5 = {{ solution.result }}$$
+
+<div class="container" align="center">
+  <figure class="figure">
+    <img src="plot"
+         class="figure-img img-fluid rounded"
+         alt="alt test">
+    <figcaption class="figure-caption">plot description</figcaption>
+  </figure>
+</div>
+{% endblock %}

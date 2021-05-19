@@ -23,6 +23,9 @@ app.config["problems"] = {
     "Mathematics": {
         "XY Problem": "xy",
     },
+    "Test Runs": {
+        "Test": "test",
+    },
 }
 app.config["submit_on_change"] = config["application"].getboolean("submit_on_change")
 
@@ -47,4 +50,8 @@ app.register_blueprint(
 )
 app.register_blueprint(
     problems.pressure_pipe_01.bp, url_prefix="/problems/pressure_pipe"
+)
+import ezprobs.problems.test
+app.register_blueprint(
+    problems.test.bp, url_prefix="/problems/test"
 )
