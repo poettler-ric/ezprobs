@@ -13,4 +13,4 @@ flask run
 # Documentation
 
 A guide on how to create new problems or how to deploy the server can be seen
-in the `doc` director
+in the `doc` directory.
