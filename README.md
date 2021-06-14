@@ -1,54 +1,16 @@
-# Prerequisites
+# ezProbs
 
-## Environment
+A framework to visualize problems for students and show the influence of
+selected variables on the results.
 
-Create the environment:
-
-``` shell
-# create environment
-python3 -m venv ~/pyenv/ezprobs
-# activate environment
-source ~/pyenv/ezprobs/bin/activate
-```
-
-And install the needed packages:
-
-``` shell
-pip install --upgrade pip
-pip install --upgrade flask
-pip install --upgrade numpy
-pip install --upgrade matplotlib
-pip install --upgrade svgwrite
-pip install --upgrade scipy
-```
-
-## User directory
-
-Install the needed packages:
-
-``` shell
-pip install --user --upgrade pip
-pip install --user --upgrade flask
-pip install --user --upgrade numpy
-pip install --user --upgrade matplotlib
-pip install --user --upgrade svgwrite
-pip install --user --upgrade scipy
-```
-
-# Development
+# Start development server
 
 ``` shell
 export FLASK_APP=ezprobs
 export FLASK_ENV=development
 flask run
 ```
+# Documentation
 
-# Deploy
-
-## Debian
-
-``` shell
-apt install nginx python3
-apt install python3-flask python3-numpy python3-matplotlib python3-svgwrite python3-scipy
-```
-
+A guide on how to create new problems or how to deploy the server can be seen
+in the `doc` director
