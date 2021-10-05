@@ -115,21 +115,21 @@ def plot_function():
     isSubCritical = (t_n1>t_crit,t_n2>t_crit)
     if isSubCritical == (True,True):
         depthInKink = t_n2
-        headInKink = t_n2 + (q/(w*t_n2))**2/(2*GRAVITY)
+        headInKink = (q/(w*t_n2))**2/(2*GRAVITY)
         iterStartUp = t_n2
         iterStartDown = t_n2
         strFlow1 = 'ö'
         strFlow2 = 'ö'
     elif isSubCritical == (False,False):
         depthInKink = t_n1
-        headInKink = t_n1 + (q/(w*t_n1))**2/(2*GRAVITY)
+        headInKink = (q/(w*t_n1))**2/(2*GRAVITY)
         iterStartUp = 1
         iterStartDown = 1
         strFlow1 = 'i'
         strFlow2 = 'i'
     elif isSubCritical == (True,False):
         depthInKink = t_crit
-        headInKink = 1.5*t_crit
+        headInKink = 0.5*t_crit
         iterStartUp = t_crit
         iterStartDown = 1
         strFlow1 = 'ö'
@@ -137,7 +137,7 @@ def plot_function():
     elif isSubCritical == (False,True):
         # hydraulic jump (TO IMPLEMENT)
         depthInKink = t_crit
-        headInKink = 1.5*t_crit
+        headInKink = 0.5*t_crit
         iterStartUp = 1
         iterStartDown = 1
         strFlow1 = 'i'
@@ -156,7 +156,7 @@ def plot_function():
         else:
             t = depthBernoulli(xx1[i-1]-xx1[i],q,depth1[i-1],ks_1,w,iso1,iterStartUp)
             depth1[i] = t
-            head1[i] = t + (q/(w*t))**2/(2*GRAVITY)
+            head1[i] = (q/(w*t))**2/(2*GRAVITY)
         i += 1
      
     # downstream channel
@@ -172,7 +172,7 @@ def plot_function():
         else:
             t = depthBernoulli(xx2[i]-xx2[i-1],q,depth2[i-1],ks_2,w,iso2,iterStartDown)
             depth2[i] = t
-            head2[i] = t + (q/(w*t))**2/(2*GRAVITY)
+            head2[i] = (q/(w*t))**2/(2*GRAVITY)
         i += 1
     
     ## begin plotting sequence ------------------------------------------------
