@@ -1,5 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
+  <style>
+  .MAINPLOT{
+  	display: block;
+  	width: 50em;
+  	height: 30em;
+  	overflow: hidden;
+    margin-left: auto;
+    margin-right: auto
+  }
+  .SMALLPLOT{
+  	display: block;
+  	width: 30em;
+  	height: 15em;
+  	overflow: hidden;
+    margin-left: auto;
+    margin-right: auto
+  }
+  .FORMULAR3LINES{
+  	display: block;
+  	width: 50em;
+  	height: 8em;
+  	overflow: hidden;
+    margin-left: auto;
+    margin-right: auto
+  }
+  .SLIDER{
+  	display: block;
+  	width: 50em;
+  	overflow: hidden;
+    margin-left: auto;
+    margin-right: auto;
+	margin-bottom: 1rem!important
+  }
+  </style>
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -45,6 +79,7 @@
 
     <div class="container" id="content">{% block content %}{% endblock %}</div>
 
+	<script src="{{ url_for('static', filename='js/getscroll.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/mathjax/tex-mml-chtml.js') }}"></script>

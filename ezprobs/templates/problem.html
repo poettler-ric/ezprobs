@@ -8,8 +8,8 @@
   {% block description %}{% endblock %}
 
   {% if plot %}
-  <h2>Plot</h2>
-  <div class="container" align="center">
+  <h2>Solution</h2>
+  <div class="MAINPLOT">
     <figure class="figure">
       <img src="{{ plot.url }}" class="figure-img img-fluid rounded" alt="{{ plot.alt }}">
       {% if plot.caption %}
@@ -21,7 +21,7 @@
 
   <form method="POST">
     {% if parameters %}
-    <h2>Parameters</h2>
+    <!--<h2>Parameters</h2>-->
     {% for p in parameters %}
     <div class="mb-3">
       <label for="{{ p.name }}" class="form-label">{{ p.display }} = <span id="{{ p.name }}-display"></span> \(\mathrm{ {{ p.unit }} }\)</label>
@@ -36,7 +36,7 @@
   </form>
 
   {% if solution %}
-  <h2>Solution</h2>
+  <h2>Summary</h2>
   {% block solution %}{% endblock %}
   {% endif %}
 </div>
@@ -61,6 +61,7 @@
       {% else %}
       $("#{{ p.name }}-display").text($(this).val());
       {% endif %}
+	  localStorage.setItem('scrollpos', window.scrollY);
   });
   {% endfor %}
   {% endif %}

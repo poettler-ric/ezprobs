@@ -4,12 +4,14 @@ from ezprobs.units import GRAVITY, KINEMATIC_VISCOSITY
 from math import log, sqrt, atan
 from scipy.optimize import fsolve
 
-__author__ = "Richard Pöttler"
-__copyright__ = "Copyright (c) 2021 Richard Pöttler"
+__author__ = "Richard Pöttler & Manuel Pirker"
+__copyright__ = "Copyright (c) 2021 Richard Pöttler & Manuel Pirker"
 __license__ = "MIT"
-__email__ = "richard.poettler@gmail.com"
+__email__ = "manuel.pirker@tugraz.at"
 
 
+
+# free surface flow formulary
 def f_ruehlmann(y):
     """F function for the Ruehlmann calculation."""
     return 1 / 6 * log((y ** 2 + y + 1) / (y - 1) ** 2) + 1 / sqrt(3) * atan(
@@ -73,7 +75,34 @@ def t_crit_rect(discharge, width):
     """Calculates the critical depth of a rectangular channel."""
     return (discharge ** 2 / (width ** 2 * GRAVITY)) ** (1 / 3)
 
+def depthBernoulli(distance,discharge,depth,strickler_roughness,width,inclination,start=1):
+    """returns water depth and velocity head in distance x from input water level, negative x for upstream direction"""
+    if distance >= 0: # calulation direction downstream
+        modif = 1
+    elif distance < 0: # calulation direction upstream
+        modif = -1
+        distance = -distance
+    
+    Am = lambda w1, w2, t1, t2: w1*t1*0.5 + w2*t2*0.5
+    Um = lambda w1, w2, t1, t2: 0.5*w1 + t1 + 0.5*w2 + t2
+    Rm = lambda w1, w2, t1, t2: Am(w1, w2, t1, t2) / Um(w1, w2, t1, t2)
+    Ir = lambda w1, w2, t1, t2: (discharge/(Am(w1, w2, t1, t2) * strickler_roughness * (Rm(w1, w2, t1, t2)**(2/3))))**2
 
+    lhs = modif*inclination*distance + depth + (discharge/(depth*width))**2/(2*GRAVITY)
+
+    return fsolve(
+        lambda t: modif*Ir(width,width,depth,t)*distance 
+        + t
+        +(discharge/(width*t))**2/(2*GRAVITY)
+        - lhs,
+        start,
+    )[0]
+
+def distanceBernoulli(discharge,depth,strickler_roughness,width,inclination,start=1):
+    # IMPLEMENT ROUTINE TO GET X FROM BERNOULLI
+    return 0
+
+# pipe flow formulary
 def lambda_turbulent_rough(k, d):
     """Calculates lambda for pipe loss for rough conditions"""
     return (1 / (2 * log(k / d / 3.71, 10))) ** 2
