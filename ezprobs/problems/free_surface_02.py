@@ -4,7 +4,6 @@ from flask import Blueprint, Response, render_template, request, session
 from ezprobs.hydraulics import (
     t_n_rect,
     t_crit_rect,
-    ruehlmann_rect,
     l_transition_i_r_rect,
     depthBernoulli
 )
