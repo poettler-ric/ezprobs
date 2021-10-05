@@ -33,10 +33,10 @@ def index():
     q = 150 * M3PS
     i1 = 5 * PERMILLE
     i2 = 5 * PERMILLE
-    
+
     ks1 = 10 * M ** (1 / 3) / S
     ks2 = 70 * M ** (1 / 3) / S
-	
+
     if request.method == "POST":
         ks1 = int(request.form["ks1"]) * M ** (1 / 3) / S
         ks2 = int(request.form["ks2"]) * M ** (1 / 3) / S
@@ -102,8 +102,8 @@ def plot_function():
     ks_1 = session["solution"]["ks_1"]
     t_n2 = session["solution"]["t_n2"]
     ks_2 = session["solution"]["ks_2"]
-    
-       
+
+
     ## begin calculation  -----------------------------------------------------
     # define plot size
     x_min = -400 * M
@@ -142,7 +142,7 @@ def plot_function():
         iterStartDown = 1
         strFlow1 = 'i'
         strFlow2 = 'ö'
-    
+
     # upstream channel
     xx1 = np.arange(0,100)*6 * M
     so1 = xx1*iso1
@@ -158,7 +158,7 @@ def plot_function():
             depth1[i] = t
             head1[i] = (q/(w*t))**2/(2*GRAVITY)
         i += 1
-     
+
     # downstream channel
     xx2 = np.arange(0,100)*6 * M
     so2 = -xx2*iso2
@@ -174,7 +174,7 @@ def plot_function():
             depth2[i] = t
             head2[i] = (q/(w*t))**2/(2*GRAVITY)
         i += 1
-    
+
     ## begin plotting sequence ------------------------------------------------
     fig, ax = plt.subplots()
     ax.fill_between(-xx1, so1, so1+depth1, color='b', alpha=0.1)
@@ -183,7 +183,7 @@ def plot_function():
     ax.plot(-xx1,so1+t_crit, 'k:', label='Krit. Wassertiefe',lw=1.5)
     ax.plot(-xx1,so1+depth1, 'b', label='Wasserspiegel',lw=1.5)
     ax.plot(-xx1,so1+depth1+head1, 'r--', label='Energielinie',lw=1.5)
-    
+
     ax.fill_between(xx2, so2, so2+depth2, color='b', alpha=0.1)
     ax.fill_between(xx2, so2, so2-0.5, color='k', alpha=0.1)
     ax.plot(xx2,so2, 'k', lw=3)
@@ -202,7 +202,7 @@ def plot_function():
     ax.set_xticks([-100,0,100])
     ax.set_xticklabels(['$t_{N,1}$','$t_{crit}$','$t_{N,2}$'])
     # ax.set_xlabel("Distance [m]")
-    
+
     # ax.yaxis.grid()
     plt.axhline(y=-x_min*iso1+depth1[-1]+head1[-1], color='k', lw = 0.5, alpha=0.4)
     plt.axhline(y=-x_max*iso2, color='k', lw = 0.5, alpha=0.4)
@@ -213,7 +213,7 @@ def plot_function():
                    -x_min*iso1+depth1[-1]+head1[-1]])
     ax.set_yticklabels(['$B.H.$','$Sohle$','$W.L.$','$E.H.$'])
     # ax.set_ylabel("Height [m]")
-    
+
     secax = ax.secondary_yaxis('right')
     secax.set_yticks([-x_max*iso2,
                       -x_max*iso2+depth2[-1],
@@ -221,16 +221,15 @@ def plot_function():
                       -x_min*iso1+depth1[-1]+head1[-1]])
     secax.set_yticklabels(['$B.H.$','$W.L.$','$E.L.$','$E.H.$'])
     # secax.set_ylabel('Bernoulli [C]')
-    
+
     secax.spines["right"].set_visible(False)
     ax.spines["right"].set_visible(False)
-    
-    
+
+
     ax.legend(loc='right')
     # ax.set_title("Water Surface")
-    
+
     ## cashe figure -----------------------------------------------------------
     buffer = BytesIO()
     fig.savefig(buffer, format="png")
     return Response(buffer.getvalue(), mimetype="image/png")
-    
