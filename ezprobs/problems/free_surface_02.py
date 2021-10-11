@@ -110,6 +110,9 @@ def plot_function():
     y_min = -2.5 * M
     y_max = 10 * M
 
+    xlabels = []
+    xticks = []
+
     # check flow regime
     isSubCritical = (t_n1>t_crit,t_n2>t_crit)
     if isSubCritical == (True,True):
@@ -119,6 +122,8 @@ def plot_function():
         iterStartDown = t_n2
         strFlow1 = 'ö'
         strFlow2 = 'ö'
+        xlabels = ['$t_{N,1}$', '$t_{N,2}$']
+        xticks = [-l_transition_i_r_rect(q, ks_1, w, t_n1, depthInKink, iso1), 0]
     elif isSubCritical == (False,False):
         depthInKink = t_n1
         headInKink = (q/(w*t_n1))**2/(2*GRAVITY)
@@ -126,6 +131,8 @@ def plot_function():
         iterStartDown = 1
         strFlow1 = 'i'
         strFlow2 = 'i'
+        xlabels = ['$t_{N,1}$', '$t_{N,2}$']
+        xticks = [0, l_transition_i_r_rect(q, ks_2, w, depthInKink, t_n2, iso1)]
     elif isSubCritical == (True,False):
         depthInKink = t_crit
         headInKink = 0.5*t_crit
@@ -133,6 +140,10 @@ def plot_function():
         iterStartDown = 1
         strFlow1 = 'ö'
         strFlow2 = 'i'
+        xlabels = ['$t_{N,1}$', '$t_{crit}$', '$t_{N,2}$']
+        xticks = [-l_transition_i_r_rect(q, ks_1, w, t_n1, depthInKink, iso1),
+            0,
+            l_transition_i_r_rect(q, ks_2, w, depthInKink, t_n2, iso1)]
     elif isSubCritical == (False,True):
         # hydraulic jump (TO IMPLEMENT)
         depthInKink = t_crit
@@ -141,6 +152,10 @@ def plot_function():
         iterStartDown = 1
         strFlow1 = 'i'
         strFlow2 = 'ö'
+
+    if t_n1 == t_n2:
+        xlabels = ['$t_{N,1} = t_{N,2}$']
+        xticks = [0]
 
     # upstream channel
     xx1 = np.arange(0,100)*6 * M
@@ -198,8 +213,8 @@ def plot_function():
     ax.set_frame_on(False)
     ax.xaxis.grid()
     ax.set_xlim(x_min, x_max)
-    ax.set_xticks([-100,0,100])
-    ax.set_xticklabels(['$t_{N,1}$','$t_{crit}$','$t_{N,2}$'])
+    ax.set_xticks(xticks)
+    ax.set_xticklabels(xlabels)
     # ax.set_xlabel("Distance [m]")
 
     # ax.yaxis.grid()
