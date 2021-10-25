@@ -7,14 +7,17 @@ from ezprobs.hydraulics import (
     l_transition_i_r_rect,
     depth_bernoulli_upstream,
     depth_bernoulli_downstream,
+    froude,
 )
 
 from ezprobs.problems import Parameter, Plot
 from ezprobs.units import M, S, M3PS, GRAVITY, PERMILLE
 from io import BytesIO
+from math import sqrt
 
 import numpy as np
 import matplotlib as mpl
+
 
 mpl.use("Agg")
 
@@ -115,63 +118,147 @@ def plot_function():
 
     xlabels = []
     xticks = []
+    depth = np.empty(0)
+    so = np.empty(0)
 
     # check flow regime
     isSubCritical = (t_n1 > t_crit, t_n2 > t_crit)
     if isSubCritical == (True, True):
-        depthInKink = t_n2
-        iterStartUp = t_n2
-        iterStartDown = t_n2
         strFlow1 = "ö"
         strFlow2 = "ö"
         xlabels = ["$t_{N,1}$", "$t_{N,2}$"]
-        xticks = [-l_transition_i_r_rect(q, ks_1, w, t_n1, depthInKink, iso1), 0]
+        xticks = [-l_transition_i_r_rect(q, ks_1, w, t_n1, t_n2, iso1), 0]
+
+        # upstream channel
+        xx1 = np.linspace(-600, 0, 101) * M
+        # downstream channel
+        xx2 = np.linspace(0, 600, 101) * M
+
+        xx = np.concatenate((xx1, xx2), axis=None)
+        so = np.concatenate((xx1 * -iso1, xx2 * -iso2), axis=None)
+        depth = np.concatenate(
+            (
+                depth_bernoulli_upstream(xx1, t_n2, q, w, ks_1, iso1, t_n2),
+                depth_bernoulli_downstream(xx2, t_n2, q, w, ks_2, iso2, t_n2),
+            ),
+            axis=None,
+        )
     elif isSubCritical == (False, False):
-        depthInKink = t_n1
-        iterStartUp = 1
-        iterStartDown = 1
         strFlow1 = "i"
         strFlow2 = "i"
         xlabels = ["$t_{N,1}$", "$t_{N,2}$"]
-        xticks = [0, l_transition_i_r_rect(q, ks_2, w, depthInKink, t_n2, iso1)]
+        xticks = [0, l_transition_i_r_rect(q, ks_2, w, t_n1, t_n2, iso1)]
+
+        # upstream channel
+        xx1 = np.linspace(-600, 0, 101) * M
+        # downstream channel
+        xx2 = np.linspace(0, 600, 101) * M
+
+        xx = np.concatenate((xx1, xx2), axis=None)
+        so = np.concatenate((xx1 * -iso1, xx2 * -iso2), axis=None)
+        depth = np.concatenate(
+            (
+                depth_bernoulli_upstream(xx1, t_n1, q, w, ks_1, iso1, 1),
+                depth_bernoulli_downstream(xx2, t_n1, q, w, ks_2, iso2, 1),
+            ),
+            axis=None,
+        )
     elif isSubCritical == (True, False):
-        depthInKink = t_crit
-        iterStartUp = t_crit
-        iterStartDown = 1
         strFlow1 = "ö"
         strFlow2 = "i"
         xlabels = ["$t_{N,1}$", "$t_{crit}$", "$t_{N,2}$"]
         xticks = [
-            -l_transition_i_r_rect(q, ks_1, w, t_n1, depthInKink, iso1),
+            -l_transition_i_r_rect(q, ks_1, w, t_n1, t_crit, iso1),
             0,
-            l_transition_i_r_rect(q, ks_2, w, depthInKink, t_n2, iso1),
+            l_transition_i_r_rect(q, ks_2, w, t_crit, t_n2, iso1),
         ]
+
+        # upstream channel
+        xx1 = np.linspace(-600, 0, 101) * M
+        # downstream channel
+        xx2 = np.linspace(0, 600, 101) * M
+
+        xx = np.concatenate((xx1, xx2), axis=None)
+        so = np.concatenate((xx1 * -iso1, xx2 * -iso2), axis=None)
+        depth = np.concatenate(
+            (
+                depth_bernoulli_upstream(xx1, t_crit, q, w, ks_1, iso1, t_crit),
+                depth_bernoulli_downstream(xx2, t_crit, q, w, ks_2, iso2, 1),
+            ),
+            axis=None,
+        )
     elif isSubCritical == (False, True):
-        # hydraulic jump (TO IMPLEMENT)
-        depthInKink = t_crit
-        headInKink = 0.5 * t_crit
-        iterStartUp = 1
-        iterStartDown = 1
+        v_n1 = q / (w * t_n1)
+        head_1 = v_n1 ** 2 / (2 * GRAVITY)
+        v_n2 = q / (w * t_n2)
+        head_2 = v_n2 ** 2 / (2 * GRAVITY)
+
         strFlow1 = "i"
         strFlow2 = "ö"
+
+        if (t_n1 + head_1) > (t_n2 + head_2):
+            t2 = t_n2
+            v2 = v_n2
+            t1 = 1 / 2 * t2 * (sqrt(1 + 8 * froude(v2, t2) ** 2) - 1)
+            v1 = q / (w * t1)
+            lw = 3 * t1 * (sqrt(1 + 8 * froude(v1, t1) ** 2) - 3)
+            lv = l_transition_i_r_rect(q, ks_2, w, t_n1, t1, iso2)
+
+            xlabels = ["$t_{N,1}$", "$t_1$", "$t_{N,2} = t_2$"]
+            xticks = [0, lv, lv + lw]
+
+            # upstream channel
+            xx1 = np.linspace(-600, 0, 101) * M
+            # downstream channel
+            xx2 = np.linspace(0, lv + lw, 100) * M
+            xx3 = np.linspace(lv + lw, 600, 100) * M
+
+            xx = np.concatenate((xx1, xx2, xx3), axis=None)
+            so = np.concatenate((xx1 * -iso1, xx2 * -iso2, xx3 * -iso2), axis=None)
+            depth = np.concatenate(
+                (
+                    depth_bernoulli_upstream(xx1, t_n1, q, w, ks_1, iso1, t_n1),
+                    depth_bernoulli_downstream(xx2, t_n1, q, w, ks_2, iso2, t_n1),
+                    depth_bernoulli_downstream(xx3, t_n2, q, w, ks_2, iso2, t_n2),
+                ),
+                axis=None,
+            )
+        else:
+            t1 = t_n1
+            v1 = v_n1
+            t2 = 1 / 2 * t1 * (sqrt(1 + 8 * froude(v1, t1) ** 2) - 1)
+            v2 = q / (w * t2)
+            lw = 3 * t1 * (sqrt(1 + 8 * froude(v1, t1) ** 2) - 3)
+            lv = l_transition_i_r_rect(q, ks_1, w, t2, t_n2, iso1)
+
+            xlabels = ["$t_{N,1} = t_1$", "$t_2$", "$t_{N,2}$"]
+            xticks = [-(lw + lv), -lv, 0]
+
+            # upstream channel
+            xx1 = np.linspace(-600, -(lw + lv), 101) * M
+            xx2 = np.linspace(-(lw + lv), -lv, 101) * M
+            xx3 = np.linspace(-lv, 0, 101) * M
+            # downstream channel
+            xx4 = np.linspace(0, 600, 101) * M
+
+            xx = np.concatenate((xx1, xx2, xx3, xx4), axis=None)
+            so = np.concatenate(
+                (xx1 * -iso1, xx2 * -iso1, xx3 * -iso1, xx4 * -iso2), axis=None
+            )
+            depth = np.concatenate(
+                (
+                    depth_bernoulli_upstream(xx1, t_n1, q, w, ks_1, iso1, t_n1),
+                    depth_bernoulli_downstream(xx2, t_n1, q, w, ks_2, iso1, t_n1),
+                    depth_bernoulli_upstream(xx3, t_n2, q, w, ks_1, iso1, t_n2),
+                    depth_bernoulli_downstream(xx4, t_n2, q, w, ks_2, iso2, t_n2),
+                ),
+                axis=None,
+            )
 
     if t_n1 == t_n2:
         xlabels = ["$t_{N,1} = t_{N,2}$"]
         xticks = [0]
 
-    # upstream channel
-    xx1 = np.linspace(-600, 0, 101) * M
-    depth1 = depth_bernoulli_upstream(xx1, depthInKink, q, w, ks_1, iso1, iterStartUp)
-
-    # downstream channel
-    xx2 = np.linspace(0, 600, 101) * M
-    depth2 = depth_bernoulli_downstream(
-        xx2, depthInKink, q, w, ks_2, iso2, iterStartDown
-    )
-
-    xx = np.concatenate((xx1, xx2), axis=None)
-    so = np.concatenate((xx1 * -iso1, xx2 * -iso2), axis=None)
-    depth = np.concatenate((depth1, depth2), axis=None)
     head = (q / (w * depth)) ** 2 / (2 * GRAVITY)
 
     ## begin plotting sequence ------------------------------------------------
@@ -225,8 +312,8 @@ def plot_function():
         [
             -x_max * iso2,
             -x_min * iso1,
-            -x_min * iso1 + depth1[-1],
-            -x_min * iso1 + depth1[-1] + head[0],
+            -x_min * iso1 + depth[0],
+            -x_min * iso1 + depth[0] + head[0],
         ]
     )
     ax.set_yticklabels(["$B.H.$", "$Sohle$", "$W.L.$", "$E.H.$"])
@@ -236,9 +323,9 @@ def plot_function():
     secax.set_yticks(
         [
             -x_max * iso2,
-            -x_max * iso2 + depth2[-1],
-            -x_max * iso2 + depth2[-1] + head[-1],
-            -x_min * iso1 + depth1[-1] + head[0],
+            -x_max * iso2 + depth[-1],
+            -x_max * iso2 + depth[-1] + head[-1],
+            -x_min * iso1 + depth[0] + head[0],
         ]
     )
     secax.set_yticklabels(["$B.H.$", "$W.L.$", "$E.L.$", "$E.H.$"])

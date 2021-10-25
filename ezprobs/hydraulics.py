@@ -126,6 +126,11 @@ def depth_bernoulli_downstream(
     return depth
 
 
+def froude(velocity, depth):
+    """Calculates the foude number based on velocity and depth."""
+    return velocity / sqrt(GRAVITY * depth)
+
+
 def depthBernoulli(
     distance, discharge, depth, strickler_roughness, width, inclination, start=1
 ):
