@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
-from ezprobs.units import GRAVITY, KINEMATIC_VISCOSITY
-from math import log, sqrt, atan
+from math import atan, log, sqrt
+
 from scipy.optimize import fsolve
+
+from ezprobs.units import GRAVITY, KINEMATIC_VISCOSITY
 
 __author__ = "Richard Pöttler & Manuel Pirker"
 __copyright__ = "Copyright (c) 2021 Richard Pöttler & Manuel Pirker"
