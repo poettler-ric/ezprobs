@@ -179,9 +179,9 @@ def plot_function():
     ax.fill_between(xx, so, so + depth, color="b", alpha=0.1)
     ax.fill_between(xx, so, so - 0.5, color="k", alpha=0.1)
 
-    # TODO: find a better way to paint the sole before and after the switch with different strokes
-    ax.plot(xx1, xx1 * -iso1, "k", lw=1.5)
-    ax.plot(xx2, xx2 * -iso2, "k", lw=3)
+    # plot the sole
+    ax.plot([x_min, 0], [x_min * -iso1, 0], "k", lw=1.5)
+    ax.plot([0, x_max], [0, x_max * -iso2], "k", lw=3)
 
     ax.plot(xx, so + t_crit, "k:", label="Krit. Wassertiefe", lw=1.5)
     ax.plot(xx, so + depth, "b", label="Wasserspiegel", lw=1.5)
