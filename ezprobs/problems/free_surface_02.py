@@ -138,8 +138,8 @@ def plot_function():
         so = np.concatenate((xx1 * -iso1, xx2 * -iso2), axis=None)
         depth = np.concatenate(
             (
-                depth_bernoulli_upstream(xx1, t_n2, q, w, ks_1, iso1, t_n2),
-                depth_bernoulli_downstream(xx2, t_n2, q, w, ks_2, iso2, t_n2),
+                depth_bernoulli_upstream(xx1, t_n2, q, w, ks_1, iso1),
+                depth_bernoulli_downstream(xx2, t_n2, q, w, ks_2, iso2),
             ),
             axis=None,
         )
@@ -158,8 +158,8 @@ def plot_function():
         so = np.concatenate((xx1 * -iso1, xx2 * -iso2), axis=None)
         depth = np.concatenate(
             (
-                depth_bernoulli_upstream(xx1, t_n1, q, w, ks_1, iso1, 1),
-                depth_bernoulli_downstream(xx2, t_n1, q, w, ks_2, iso2, 1),
+                depth_bernoulli_upstream(xx1, t_n1, q, w, ks_1, iso1),
+                depth_bernoulli_downstream(xx2, t_n1, q, w, ks_2, iso2),
             ),
             axis=None,
         )
@@ -182,8 +182,8 @@ def plot_function():
         so = np.concatenate((xx1 * -iso1, xx2 * -iso2), axis=None)
         depth = np.concatenate(
             (
-                depth_bernoulli_upstream(xx1, t_crit, q, w, ks_1, iso1, t_crit),
-                depth_bernoulli_downstream(xx2, t_crit, q, w, ks_2, iso2, 1),
+                depth_bernoulli_upstream(xx1, t_crit, q, w, ks_1, iso1),
+                depth_bernoulli_downstream(xx2, t_crit, q, w, ks_2, iso2),
             ),
             axis=None,
         )
@@ -217,9 +217,9 @@ def plot_function():
             so = np.concatenate((xx1 * -iso1, xx2 * -iso2, xx3 * -iso2), axis=None)
             depth = np.concatenate(
                 (
-                    depth_bernoulli_upstream(xx1, t_n1, q, w, ks_1, iso1, t_n1),
-                    depth_bernoulli_downstream(xx2, t_n1, q, w, ks_2, iso2, t_n1),
-                    depth_bernoulli_downstream(xx3, t_n2, q, w, ks_2, iso2, t_n2),
+                    depth_bernoulli_upstream(xx1, t_n1, q, w, ks_1, iso1),
+                    depth_bernoulli_downstream(xx2, t_n1, q, w, ks_2, iso2),
+                    depth_bernoulli_downstream(xx3, t_n2, q, w, ks_2, iso2),
                 ),
                 axis=None,
             )
@@ -247,10 +247,10 @@ def plot_function():
             )
             depth = np.concatenate(
                 (
-                    depth_bernoulli_upstream(xx1, t_n1, q, w, ks_1, iso1, t_n1),
-                    depth_bernoulli_downstream(xx2, t_n1, q, w, ks_2, iso1, t_n1),
-                    depth_bernoulli_upstream(xx3, t_n2, q, w, ks_1, iso1, t_n2),
-                    depth_bernoulli_downstream(xx4, t_n2, q, w, ks_2, iso2, t_n2),
+                    depth_bernoulli_upstream(xx1, t_n1, q, w, ks_1, iso1),
+                    depth_bernoulli_downstream(xx2, t_n1, q, w, ks_2, iso1),
+                    depth_bernoulli_upstream(xx3, t_n2, q, w, ks_1, iso1),
+                    depth_bernoulli_downstream(xx4, t_n2, q, w, ks_2, iso2),
                 ),
                 axis=None,
             )

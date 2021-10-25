@@ -79,7 +79,7 @@ def t_crit_rect(discharge, width):
 
 
 def depth_bernoulli_upstream(
-    x, starting_depth, discharge, width, strickler_roughness, inclination, iterstart=1
+    x, starting_depth, discharge, width, strickler_roughness, inclination
 ):
     """Calculates the depth of given points pasend on the energy equation in upstream direction.
     
@@ -97,13 +97,13 @@ def depth_bernoulli_upstream(
                 strickler_roughness,
                 width,
                 inclination,
-                iterstart,
+                depth[i + 1],
             )
     return depth
 
 
 def depth_bernoulli_downstream(
-    x, starting_depth, discharge, width, strickler_roughness, inclination, iterstart=1
+    x, starting_depth, discharge, width, strickler_roughness, inclination
 ):
     """Calculates the depth of given points pasend on the energy equation in downstream direction.
     
@@ -121,7 +121,7 @@ def depth_bernoulli_downstream(
                 strickler_roughness,
                 width,
                 inclination,
-                iterstart,
+                depth[i - 1],
             )
     return depth
 
