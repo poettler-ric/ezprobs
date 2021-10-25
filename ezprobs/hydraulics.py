@@ -2,6 +2,7 @@
 
 from math import atan, log, sqrt
 
+import numpy as np
 from scipy.optimize import fsolve
 
 from ezprobs.units import GRAVITY, KINEMATIC_VISCOSITY
@@ -75,6 +76,54 @@ def l_transition_i_r_rect(discharge, strickler_roughness, width, t_1, t_2, incli
 def t_crit_rect(discharge, width):
     """Calculates the critical depth of a rectangular channel."""
     return (discharge ** 2 / (width ** 2 * GRAVITY)) ** (1 / 3)
+
+
+def depth_bernoulli_upstream(
+    x, starting_depth, discharge, width, strickler_roughness, inclination, iterstart=1
+):
+    """Calculates the depth of given points pasend on the energy equation in upstream direction.
+    
+    ´x´ are the absolute points in x direction. ´starting_depth´ is the depth given at ´x[-1].´
+    """
+    depth = np.zeros(x.shape)
+    for i in reversed(range(len(x))):
+        if i == len(x) - 1:
+            depth[i] = starting_depth
+        else:
+            depth[i] = depthBernoulli(
+                x[i] - x[i + 1],
+                discharge,
+                depth[i + 1],
+                strickler_roughness,
+                width,
+                inclination,
+                iterstart,
+            )
+    return depth
+
+
+def depth_bernoulli_downstream(
+    x, starting_depth, discharge, width, strickler_roughness, inclination, iterstart=1
+):
+    """Calculates the depth of given points pasend on the energy equation in downstream direction.
+    
+    ´x´ are the absolute points in x direction. ´starting_depth´ is the depth given at ´x[0].´
+    """
+    depth = np.zeros(x.shape)
+    for i in range(len(x)):
+        if i == 0:
+            depth[i] = starting_depth
+        else:
+            depth[i] = depthBernoulli(
+                x[i] - x[i - 1],
+                discharge,
+                depth[i - 1],
+                strickler_roughness,
+                width,
+                inclination,
+                iterstart,
+            )
+    return depth
 
 
 def depthBernoulli(

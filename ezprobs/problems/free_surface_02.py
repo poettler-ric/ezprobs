@@ -5,8 +5,10 @@ from ezprobs.hydraulics import (
     t_n_rect,
     t_crit_rect,
     l_transition_i_r_rect,
-    depthBernoulli,
+    depth_bernoulli_upstream,
+    depth_bernoulli_downstream,
 )
+
 from ezprobs.problems import Parameter, Plot
 from ezprobs.units import M, S, M3PS, GRAVITY, PERMILLE
 from io import BytesIO
@@ -118,7 +120,6 @@ def plot_function():
     isSubCritical = (t_n1 > t_crit, t_n2 > t_crit)
     if isSubCritical == (True, True):
         depthInKink = t_n2
-        headInKink = (q / (w * t_n2)) ** 2 / (2 * GRAVITY)
         iterStartUp = t_n2
         iterStartDown = t_n2
         strFlow1 = "ö"
@@ -127,7 +128,6 @@ def plot_function():
         xticks = [-l_transition_i_r_rect(q, ks_1, w, t_n1, depthInKink, iso1), 0]
     elif isSubCritical == (False, False):
         depthInKink = t_n1
-        headInKink = (q / (w * t_n1)) ** 2 / (2 * GRAVITY)
         iterStartUp = 1
         iterStartDown = 1
         strFlow1 = "i"
@@ -136,7 +136,6 @@ def plot_function():
         xticks = [0, l_transition_i_r_rect(q, ks_2, w, depthInKink, t_n2, iso1)]
     elif isSubCritical == (True, False):
         depthInKink = t_crit
-        headInKink = 0.5 * t_crit
         iterStartUp = t_crit
         iterStartDown = 1
         strFlow1 = "ö"
@@ -161,56 +160,32 @@ def plot_function():
         xticks = [0]
 
     # upstream channel
-    xx1 = np.arange(0, 100) * 6 * M
-    so1 = xx1 * iso1
-    depth1 = np.zeros(xx1.shape)
-    head1 = np.zeros(xx1.shape)
-    i = int(0)
-    while i < len(xx1):
-        if i == 0:
-            depth1[i] = depthInKink
-            head1[i] = headInKink
-        else:
-            t = depthBernoulli(
-                xx1[i - 1] - xx1[i], q, depth1[i - 1], ks_1, w, iso1, iterStartUp
-            )
-            depth1[i] = t
-            head1[i] = (q / (w * t)) ** 2 / (2 * GRAVITY)
-        i += 1
+    xx1 = np.linspace(-600, 0, 101) * M
+    depth1 = depth_bernoulli_upstream(xx1, depthInKink, q, w, ks_1, iso1, iterStartUp)
 
     # downstream channel
-    xx2 = np.arange(0, 100) * 6 * M
-    so2 = -xx2 * iso2
-    depth2 = np.zeros(xx2.shape)
-    head2 = np.zeros(xx2.shape)
-    i = int(0)
-    while i < len(xx2):
-        if i == 0:
-            depth2[i] = depthInKink
-            head2[i] = headInKink
-        else:
-            t = depthBernoulli(
-                xx2[i] - xx2[i - 1], q, depth2[i - 1], ks_2, w, iso2, iterStartDown
-            )
-            depth2[i] = t
-            head2[i] = (q / (w * t)) ** 2 / (2 * GRAVITY)
-        i += 1
+    xx2 = np.linspace(0, 600, 101) * M
+    depth2 = depth_bernoulli_downstream(
+        xx2, depthInKink, q, w, ks_2, iso2, iterStartDown
+    )
+
+    xx = np.concatenate((xx1, xx2), axis=None)
+    so = np.concatenate((xx1 * -iso1, xx2 * -iso2), axis=None)
+    depth = np.concatenate((depth1, depth2), axis=None)
+    head = (q / (w * depth)) ** 2 / (2 * GRAVITY)
 
     ## begin plotting sequence ------------------------------------------------
     fig, ax = plt.subplots()
-    ax.fill_between(-xx1, so1, so1 + depth1, color="b", alpha=0.1)
-    ax.fill_between(-xx1, so1, so1 - 0.5, color="k", alpha=0.1)
-    ax.plot(-xx1, so1, "k", lw=1.5)
-    ax.plot(-xx1, so1 + t_crit, "k:", label="Krit. Wassertiefe", lw=1.5)
-    ax.plot(-xx1, so1 + depth1, "b", label="Wasserspiegel", lw=1.5)
-    ax.plot(-xx1, so1 + depth1 + head1, "r--", label="Energielinie", lw=1.5)
+    ax.fill_between(xx, so, so + depth, color="b", alpha=0.1)
+    ax.fill_between(xx, so, so - 0.5, color="k", alpha=0.1)
 
-    ax.fill_between(xx2, so2, so2 + depth2, color="b", alpha=0.1)
-    ax.fill_between(xx2, so2, so2 - 0.5, color="k", alpha=0.1)
-    ax.plot(xx2, so2, "k", lw=3)
-    ax.plot(xx2, so2 + t_crit, "k:", lw=1.5)
-    ax.plot(xx2, so2 + depth2, "b", lw=1.5)
-    ax.plot(xx2, so2 + depth2 + head2, "r--", lw=1.5)
+    # TODO: find a better way to paint the sole before and after the switch with different strokes
+    ax.plot(xx1, xx1 * -iso1, "k", lw=1.5)
+    ax.plot(xx2, xx2 * -iso2, "k", lw=3)
+
+    ax.plot(xx, so + t_crit, "k:", label="Krit. Wassertiefe", lw=1.5)
+    ax.plot(xx, so + depth, "b", label="Wasserspiegel", lw=1.5)
+    ax.plot(xx, so + depth + head, "r--", label="Energielinie", lw=1.5)
 
     plt.text(
         x_min / 2,
@@ -243,7 +218,7 @@ def plot_function():
     # ax.set_xlabel("Distance [m]")
 
     # ax.yaxis.grid()
-    plt.axhline(y=-x_min * iso1 + depth1[-1] + head1[-1], color="k", lw=0.5, alpha=0.4)
+    plt.axhline(y=-x_min * iso1 + depth[0] + head[0], color="k", lw=0.5, alpha=0.4)
     plt.axhline(y=-x_max * iso2, color="k", lw=0.5, alpha=0.4)
     ax.set_ylim(y_min, y_max)
     ax.set_yticks(
@@ -251,7 +226,7 @@ def plot_function():
             -x_max * iso2,
             -x_min * iso1,
             -x_min * iso1 + depth1[-1],
-            -x_min * iso1 + depth1[-1] + head1[-1],
+            -x_min * iso1 + depth1[-1] + head[0],
         ]
     )
     ax.set_yticklabels(["$B.H.$", "$Sohle$", "$W.L.$", "$E.H.$"])
@@ -262,8 +237,8 @@ def plot_function():
         [
             -x_max * iso2,
             -x_max * iso2 + depth2[-1],
-            -x_max * iso2 + depth2[-1] + head2[-1],
-            -x_min * iso1 + depth1[-1] + head1[-1],
+            -x_max * iso2 + depth2[-1] + head[-1],
+            -x_min * iso1 + depth1[-1] + head[0],
         ]
     )
     secax.set_yticklabels(["$B.H.$", "$W.L.$", "$E.L.$", "$E.H.$"])
